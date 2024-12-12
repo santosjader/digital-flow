@@ -1,0 +1,135 @@
+services:
+  redis:
+    image: redis:latest
+    command: ["redis-server", "--appendonly", "yes", "--port", "6379"]
+    networks:
+      - app_network
+    volumes:
+      - redis_data:/data
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback 
+        monitor: 60s
+        max_failure_ratio: 0.2
+      placement:
+        constraints:
+          - node.role == manager
+
+  postgres:
+    image: postgres:15
+    networks:
+      - app_network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback 
+        monitor: 60s
+        max_failure_ratio: 0.2
+      placement:
+        constraints:
+          - node.role == manager
+  pgbouncer:
+    image: edoburu/pgbouncer:latest
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-h', 'localhost']
+    networks:
+      - app_network
+    ports:
+      - "5432:5432"
+    environment:
+      - DB_USER=postgres
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_HOST=postgres
+      - AUTH_TYPE=scram-sha-256
+      - POOL_MODE=transaction
+      - MAX_CLIENT_CONN=500
+      - DEFAULT_POOL_SIZE=20
+    volumes:
+      - pgbouncer_data:/etc/pgbouncer 
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback 
+        monitor: 60s
+        max_failure_ratio: 0.2
+      placement:
+        constraints:
+          - node.role == manager       
+  minio:
+    image: quay.io/minio/minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      - MINIO_BROWSER_REDIRECT_URL=${MINIO_BROWSER_REDIRECT_URL}
+      - MINIO_SERVER_URL=${MINIO_SERVER_URL}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    networks:
+      - app_network
+      - proxy_network
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback 
+        monitor: 60s
+        max_failure_ratio: 0.2
+      placement:
+        constraints:
+          - node.role == manager
+
+networks:
+  app_network:
+    external: true
+  proxy_network:
+    external: true
+
+volumes:
+  redis_data:
+    external: true
+  postgres_data:
+    external: true
+  pgbouncer_data:
+    external: true
+  minio_data:
+    external: true
