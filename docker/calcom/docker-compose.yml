@@ -1,0 +1,45 @@
+services:
+  calcom:
+    image: calcom.docker.scarf.sh/calcom/cal.com
+    environment:
+      - NEXT_PUBLIC_WEBAPP_URL=${NEXT_PUBLIC_WEBAPP_URL}
+      - NEXT_PUBLIC_API_V2_URL=${NEXT_PUBLIC_API_V2_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - CALENDSO_ENCRYPTION_KEY=${CALENDSO_ENCRYPTION_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_DIRECT_URL=${DATABASE_URL}
+      - GOOGLE_API_CREDENTIALS=${GOOGLE_API_CREDENTIALS}
+      - CALCOM_TELEMETRY_DISABLED=${CALCOM_TELEMETRY_DISABLED}
+      - EMAIL_FROM=${EMAIL_FROM}
+      - EMAIL_SERVER_HOST=${EMAIL_SERVER_HOST}
+      - EMAIL_SERVER_PORT=${EMAIL_SERVER_PORT}
+      - EMAIL_SERVER_USER=${EMAIL_SERVER_USER}
+      - EMAIL_SERVER_PASSWORD=${EMAIL_SERVER_PASSWORD}
+      - NODE_ENV=${NODE_ENV}
+    networks:
+      - app_network
+      - proxy_network
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback 
+        monitor: 60s
+        max_failure_ratio: 0.2
+      placement:
+        constraints:
+          - node.role == worker
+
+networks:
+  app_network:
+    external: true
+  proxy_network:
+    external: true
