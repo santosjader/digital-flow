@@ -1,0 +1,19 @@
+docker network create --driver=overlay --attachable proxy_network
+docker network create --driver=overlay --attachable app_network
+docker network create --driver=overlay agent_network
+docker network create --driver=overlay --attachable monitor_network
+docker volume create portainer_data
+docker volume create caddy_data 
+docker volume create caddy_config
+docker volume create caddy_file
+docker volume create redis_data
+docker volume create postgres_data
+docker volume create minio_data
+docker volume create n8n_data
+docker volume create evo_store
+docker volume create evo_instances
+docker volume create chatwoot_data
+docker volume create prometheus_data
+docker volume create grafana_data
+docker volume create dify_data
+docker volume create appsmith_data
