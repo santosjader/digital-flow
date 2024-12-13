@@ -1,5 +1,5 @@
 services:
-  evolution:
+  api:
     image: atendai/evolution-api:v1.8.2
     restart: always
     environment:
