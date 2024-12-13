@@ -1,6 +1,6 @@
 services:
   appsmith:
-    image: index.docker.io/appsmith/appsmith-ce
+    image: appsmith/appsmith-ce:release
     restart: always
     volumes:
       - appsmith_data:/appsmith-stacks
