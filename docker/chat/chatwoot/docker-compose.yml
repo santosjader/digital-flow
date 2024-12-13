@@ -50,7 +50,7 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == worker
+          - node.role == manager
 
   worker:
     image: chatwoot/chatwoot:latest
@@ -102,7 +102,7 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == worker
+          - node.role == manager
 
 volumes:
   chatwoot_data:
