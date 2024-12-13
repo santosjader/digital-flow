@@ -105,10 +105,6 @@ services:
           - node.role == worker
 
 volumes:
-  evo_store:
-    external: true
-  evo_instances:
-    external: true
   chatwoot_data:
     external: true
 
