@@ -34,13 +34,13 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - DB_USER=postgres
+      - DB_USER=${DB_USER}
       - DB_PASSWORD=${POSTGRES_PASSWORD}
-      - DB_HOST=postgres
-      - AUTH_TYPE=scram-sha-256
-      - POOL_MODE=transaction
-      - MAX_CLIENT_CONN=500
-      - DEFAULT_POOL_SIZE=20
+      - DB_HOST=${DB_HOST}
+      - AUTH_TYPE=${AUTH_TYPE}
+      - POOL_MODE=${POOL_MODE}
+      - MAX_CLIENT_CONN=${MAX_CLIENT_CONN}
+      - DEFAULT_POOL_SIZE=${DEFAULT_POOL_SIZE}
     volumes:
       - pgbouncer_data:/etc/pgbouncer 
     deploy:
