@@ -1,0 +1,39 @@
+painel.jadersantos.com.br {
+        reverse_proxy http://172.245.225.46:9123
+}
+
+monitor.jadersantos.com.br {
+	reverse_proxy grafana:3000
+}
+
+n8n.jadersantos.com.br {
+        reverse_proxy n8n:5678
+}
+
+evo.jadersantos.com.br {
+        reverse_proxy evolution:8080
+}
+
+builder.jadersantos.com.br {
+        reverse_proxy typebot_builder:3000
+}
+
+typebot.jadersantos.com.br {
+        reverse_proxy typebot_viewer:3000
+}
+
+chat.jadersantos.com.br {
+        reverse_proxy chatwoot_app:3000
+}
+
+minio.jadersantos.com.br {
+        reverse_proxy http://minio:9001
+}
+
+s3.jadersantos.com.br {
+        reverse_proxy http://minio:9000
+}
+
+agenda.flowestech.com.br {
+	reverse_proxy calcom:3000
+}
