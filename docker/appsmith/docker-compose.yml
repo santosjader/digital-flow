@@ -21,10 +21,11 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.applications == appsmith
+
 volumes:
   appsmith_data:
     external: true
+    
 networks:
   proxy_network:
     external: true
