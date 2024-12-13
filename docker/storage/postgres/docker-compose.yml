@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:15
+    image: pgvector/pgvector:0.8.0-pg17
     networks:
       - app_network
     volumes:
