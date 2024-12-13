@@ -1,0 +1,9 @@
+sudo mkdir -p /etc/caddy
+
+sudo nano /etc/caddy/Caddyfile
+
+sudo docker service update --config-rm Caddyfile proxy_caddy
+sudo docker config rm Caddyfile
+docker config create Caddyfile /etc/caddy/Caddyfile
+sudo docker service update --config-add source=Caddyfile,target=/etc/caddy/Caddyfile proxy_caddy
+sudo docker service update --force proxy_caddy
