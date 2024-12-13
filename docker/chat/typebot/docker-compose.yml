@@ -38,7 +38,7 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == worker
+          - node.role == manager
 
   viewer:
     image: baptistearno/typebot-viewer:latest
@@ -79,7 +79,7 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == worker
+          - node.role == manager
 
 networks:
   app_network:
