@@ -1,4 +1,0 @@
-sudo docker network create --driver=overlay --attachable proxy_network && \
-sudo docker network create --driver=overlay --attachable app_network && \
-sudo docker network create --driver=overlay agent_network && \
-sudo docker network create --driver=overlay --attachable monitor_network
