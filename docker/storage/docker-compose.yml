@@ -1,1 +1,158 @@
-
+services:
+  postgres:
+    image: pgvector/pgvector:0.8.0-pg17
+    networks:
+      - app_network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback 
+        monitor: 60s
+        max_failure_ratio: 0.2
+      placement:
+        constraints:
+          - node.role == manager
+          
+  pgbouncer:
+    image: edoburu/pgbouncer:latest
+    networks:
+      - app_network
+    volumes:
+      - pgbouncer_data:/etc/pgbouncer 
+    ports:
+      - "5432:5432"
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - AUTH_TYPE=${AUTH_TYPE}
+      - POOL_MODE=${POOL_MODE}
+      - MAX_CLIENT_CONN=${MAX_CLIENT_CONN}
+      - DEFAULT_POOL_SIZE=${DEFAULT_POOL_SIZE}
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-h', 'localhost']
+      interval: 30s
+      timeout: 10s 
+      retries: 3
+      start_period: 10s
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback 
+        monitor: 60s
+        max_failure_ratio: 0.2
+      placement:
+        constraints:
+          - node.role == manager
+  minio:
+    image: quay.io/minio/minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      - MINIO_BROWSER_REDIRECT_URL=${MINIO_BROWSER_REDIRECT_URL}
+      - MINIO_SERVER_URL=${MINIO_SERVER_URL}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    networks:
+      - app_network
+      - proxy_network
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback 
+        monitor: 60s
+        max_failure_ratio: 0.2
+      placement:
+        constraints:
+          - node.role == manager
+          
+  redis:
+    image: redis:latest
+    command: ["redis-server", "--appendonly", "yes", "--port", "6379"]
+    networks:
+      - app_network
+    volumes:
+      - redis_data:/data
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback 
+        monitor: 60s
+        max_failure_ratio: 0.2
+      placement:
+        constraints:
+          - node.role == manager
+          
+networks:
+  app_network:
+    external: true
+  proxy_network:
+    external: true
+    
+volumes:
+  postgres_data:
+    external: true
+  pgbouncer_data:
+    external: true
+  minio_data:
+    external: true
+  redis_data:
+    external: true
