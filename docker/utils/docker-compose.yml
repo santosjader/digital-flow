@@ -15,7 +15,6 @@ services:
       - BACKUP_STOP_SERVICE_TIMEOUT=5m
       - NOTIFICATION_LEVEL=info
       - EXEC_FORWARD_OUTPUT=true
-      - EXEC_LABEL=database
       - BACKUP_SOURCES=/var/lib/docker/volumes
     volumes:
       # Monte todos os volumes locais para backup
