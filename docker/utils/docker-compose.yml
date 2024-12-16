@@ -2,7 +2,7 @@ services:
   backup:
     image: offen/docker-volume-backup:v2
     environment:
-      - BACKUP_CRON_EXPRESSION=10 16 * * *
+      - BACKUP_CRON_EXPRESSION=17 16 * * *
       - BACKUP_COMPRESSION=gz
       - GZIP_PARALLELISM=2
       - BACKUP_FILENAME=backup-%Y-%m-%dT%H-%M-%S.{{"{{"}} .Extension {{"}}"}}
@@ -13,7 +13,7 @@ services:
       - BACKUP_PRUNING_LEEWAY=1m
       - BACKUP_PRUNING_PREFIX=backup-
       - BACKUP_STOP_SERVICE_TIMEOUT=5m
-      - NOTIFICATION_URLS=smtp://contato@jadersantos.com.br:J@der1472@host:587/?fromAddress=contato@jadersantos.com.br&toAddresses=msantos.jader@gmail.com
+      - NOTIFICATION_URLS=smtp://contato@jadersantos.com.br:J@der1472@umbler.smtp.com:587/?fromAddress=contato@jadersantos.com.br&toAddresses=msantos.jader@gmail.com
       - NOTIFICATION_LEVEL=info
       - EXEC_FORWARD_OUTPUT=true
       - EXEC_LABEL=database
