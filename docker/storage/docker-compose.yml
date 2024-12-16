@@ -7,6 +7,9 @@ services:
       - postgres_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    labels:
+      docker-volume-backup.exec-label: "database"
+      docker-volume-backup.archive-pre: "/bin/bash -c 'pg_dumpall -U postgres > /var/lib/postgresql/data/backup.sql'"
     logging:
       driver: json-file
       options:
