@@ -1,27 +1,4 @@
 services:
-  appsmith:
-    image: appsmith/appsmith-ce:release
-    restart: always
-    volumes:
-      - appsmith_data:/appsmith-stacks
-    networks:
-      - proxy_network
-    environment:
-      - APPSMITH_SIGNUP_DISABLED=FALSE
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-      update_config:
-        parallelism: 1
-        delay: 10s
-        failure_action: rollback 
-        monitor: 60s
-        max_failure_ratio: 0.2
-      placement:
-        constraints:
-          - node.role == worker
-
   calcom:
     image: calcom.docker.scarf.sh/calcom/cal.com
     environment:
@@ -61,10 +38,6 @@ services:
         constraints:
           - node.role == worker
 
-volumes:
-  appsmith_data:
-    external: true
-    
 networks:
   app_network:
     external: true
