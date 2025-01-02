@@ -50,7 +50,7 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == manager
+          - node.role == worker
 
   chatwoot_worker:
     image: chatwoot/chatwoot:latest
@@ -102,7 +102,7 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == manager
+          - node.role == worker
 
   evolution_api:
     image: atendai/evolution-api:v1.8.2
@@ -141,7 +141,7 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == manager
+          - node.role == worker
 
   typebot_builder:
     image: baptistearno/typebot-builder:3.2.0
@@ -182,7 +182,7 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == manager
+          - node.role == worker
 
   typebot_viewer:
     image: baptistearno/typebot-viewer:3.2.0
@@ -223,7 +223,7 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == manager
+          - node.role == worker
 
 volumes:
   chatwoot_data:
