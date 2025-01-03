@@ -30,7 +30,7 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == manager
+          - node.role == worker
           
   pgbouncer:
     image: edoburu/pgbouncer:latest
@@ -66,7 +66,7 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == manager
+          - node.role == worker
   minio:
     image: quay.io/minio/minio
     command: server /data --console-address ":9001"
@@ -106,7 +106,7 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == manager
+          - node.role == worker
           
   redis:
     image: redis:latest
@@ -138,7 +138,7 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == manager
+          - node.role == worker
           
 networks:
   app_network:
