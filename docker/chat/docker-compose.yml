@@ -141,7 +141,7 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == worker
+          - node.role == manager
 
   typebot_builder:
     image: baptistearno/typebot-builder:3.2.0
