@@ -1,6 +1,11 @@
 services:
   evolution_v2:
     image: atendai/evolution-api:v2.2.0
+    networks:
+      - app_network
+      - proxy_network
+    volumes:
+      - evolution_data:/evolution/instances
     environment:
       - TYPEBOT_ENABLED=${TYPEBOT_ENABLED}
       - DIFY_ENABLED=${DIFY_ENABLED}
@@ -27,11 +32,25 @@ services:
       - CACHE_REDIS_SAVE_INSTANCES=${CACHE_REDIS_SAVE_INSTANCES}
       - CACHE_LOCAL_ENABLED=${CACHE_LOCAL_ENABLED}
       - TYPEBOT_API_VERSION=${TYPEBOT_API_VERSION}
-    volumes:
-      - evolution_data:/evolution/instances
-    networks:
-      - app_network
-      - proxy_network
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback 
+        monitor: 60s
+        max_failure_ratio: 0.2
+      placement:
+        constraints:
+          - node.role == manager
+          
 volumes:
   evolution_data:
     external: true
