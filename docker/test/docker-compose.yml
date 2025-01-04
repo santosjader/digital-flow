@@ -5,7 +5,7 @@ services:
       - app_network
       - proxy_network
     volumes:
-      - evolution_data:/evolution/instances
+      - evo_data:/evolution/instances
     environment:
       - TYPEBOT_ENABLED=${TYPEBOT_ENABLED}
       - DIFY_ENABLED=${DIFY_ENABLED}
@@ -52,7 +52,7 @@ services:
           - node.role == manager
           
 volumes:
-  evolution_data:
+  evo_data:
     external: true
 networks:
   app_network:
