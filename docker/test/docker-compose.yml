@@ -8,6 +8,7 @@ services:
       - evo_data:/evolution/instances
     environment:
       - TYPEBOT_ENABLED=${TYPEBOT_ENABLED}
+      - TYPEBOT_KEEP_ALIVE=${TYPEBOT_KEEP_ALIVE}
       - DIFY_ENABLED=${DIFY_ENABLED}
       - CHATWOOT_ENABLED=${CHATWOOT_ENABLED}
       - OPENAI_ENABLED=${OPENAI_ENABLED}
