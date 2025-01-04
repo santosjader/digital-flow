@@ -1,0 +1,42 @@
+services:
+  evolution_v2:
+    image: atendai/evolution-api:v2.2.0
+    environment:
+      TYPEBOT_ENABLED: "true"
+      DIFY_ENABLED: "true"
+      CHATWOOT_ENABLED: "true"
+      OPENAI_ENABLED: "true"
+      SERVER_URL: ${SERVER_URL}
+      AUTHENTICATION_API_KEY: ${AUTHENTICATION_API_KEY}
+      # Configuração do PostgreSQL
+      DATABASE_ENABLED: "true"
+      DATABASE_PROVIDER: postgresql
+      DATABASE_CONNECTION_URI: ${DATABASE_CONNECTION_URI}
+      DATABASE_CONNECTION_CLIENT_NAME: evolution
+      DATABASE_SAVE_DATA_INSTANCE: "true"
+      DATABASE_SAVE_DATA_NEW_MESSAGE: "false"
+      DATABASE_SAVE_MESSAGE_UPDATE: "false"
+      DATABASE_SAVE_DATA_CONTACTS: "false"
+      DATABASE_SAVE_DATA_CHATS: "false"
+      DATABASE_SAVE_DATA_LABELS: "false"
+      DATABASE_SAVE_DATA_HISTORIC: "false"
+      # Configuração do Redis
+      CACHE_REDIS_ENABLED: "true"
+      CACHE_REDIS_URI: ${CACHE_REDIS_URI}
+      CACHE_REDIS_PREFIX_KEY: evolution
+      CACHE_REDIS_SAVE_INSTANCES: "false"
+      CACHE_LOCAL_ENABLED: "false"
+      TYPEBOT_API_VERSION: v2.1.2
+    volumes:
+      - evolution_data:/evolution/instances
+    networks:
+      - app_network
+      - proxy_network
+volumes:
+  evolution_data:
+    external: true
+networks:
+  app_network:
+    external: true
+  proxy_network:
+    external: true
