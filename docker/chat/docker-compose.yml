@@ -105,7 +105,7 @@ services:
           - node.role == worker
 
   evolution_v2:
-    image: atendai/evolution-api:v2.2.0
+    image: atendai/evolution-api:latest
     networks:
       - app_network
       - proxy_network
