@@ -48,8 +48,8 @@ services:
   mongodb:
     image: mongo:4.4
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=${TYPEBOT_ENABLED}
-      - MONGO_INITDB_ROOT_PASSWORD=${TYPEBOT_ENABLED}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - mongodb_data:/data/db
     networks:
