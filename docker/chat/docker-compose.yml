@@ -36,7 +36,8 @@ services:
           max_failure_ratio: 0.2
         placement:
           constraints:
-            - node.role == manager
+            - node.role == worker
+            - node.labels.environment == flowbot
 
   typebot_builder:
     image: baptistearno/typebot-builder:3.2.0
@@ -77,7 +78,8 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == manager
+          - node.role == worker
+          - node.labels.environment == flowbot
 
   typebot_viewer:
     image: baptistearno/typebot-viewer:3.2.0
@@ -119,10 +121,9 @@ services:
       placement:
         constraints:
           - node.role == worker
+          - node.labels.environment == flowbot
 
 volumes:
-  chatwoot_data:
-    external: true
   evo_store:
     external: true
   evo_instances:
