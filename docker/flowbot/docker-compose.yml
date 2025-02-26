@@ -3,20 +3,40 @@ services:
     image: atendai/evolution-api:v1.8.2
     restart: always
     environment:
+      # Configurações básicas
+      - SERVER_URL=${SERVER_URL}
+      - AUTHENTICATION_API_KEY=${AUTHENTICATION_API_KEY}
+      
+      # Configurações do banco de dados
+      - DATABASE_ENABLED=${DATABASE_ENABLED}
+      - DATABASE_CONNECTION_URI=${DATABASE_CONNECTION_URI}
+      - DATABASE_CONNECTION_DB_PREFIX_NAME=${DATABASE_CONNECTION_DB_PREFIX_NAME}
+      - DATABASE_SAVE_DATA_INSTANCE=${DATABASE_SAVE_DATA_INSTANCE}
+      - DATABASE_SAVE_DATA_NEW_MESSAGE=${DATABASE_SAVE_DATA_NEW_MESSAGE}
+      - DATABASE_SAVE_MESSAGE_UPDATE=${DATABASE_SAVE_MESSAGE_UPDATE}
+      - DATABASE_SAVE_DATA_CONTACTS=${DATABASE_SAVE_DATA_CONTACTS}
+      - DATABASE_SAVE_DATA_CHATS=${DATABASE_SAVE_DATA_CHATS}
+      
+      # Integrações
       - TYPEBOT_ENABLED=${TYPEBOT_ENABLED}
       - DIFY_ENABLED=${DIFY_ENABLED}
       - CHATWOOT_ENABLED=${CHATWOOT_ENABLED}
       - OPENAI_ENABLE=${OPENAI_ENABLE}
-      - SERVER_URL=${SERVER_URL}
-      - AUTHENTICATION_API_KEY=${AUTHENTICATION_API_KEY}
+      
+      # Configurações de cache Redis
       - CACHE_REDIS_ENABLED=${CACHE_REDIS_ENABLED}
+      - CACHE_REDIS_URI=${CACHE_REDIS_URI}
       - CACHE_REDIS_PREFIX_KEY=${CACHE_REDIS_PREFIX_KEY}
+      - CACHE_REDIS_TTL=${CACHE_REDIS_TTL}
       - CACHE_REDIS_SAVE_INSTANCES=${CACHE_REDIS_SAVE_INSTANCES}
+      
+      # Configurações de cache local
       - CACHE_LOCAL_ENABLED=${CACHE_LOCAL_ENABLED}
-      # Adicione as variáveis de ambiente para conexão com MongoDB
-      - DATABASE_ENABLED=true
-      - DATABASE_CONNECTION_URI=mongodb://mongodb:27017/evolution
-      - DATABASE_CONNECTION_DB_PREFIX_NAME=evolution
+      - CACHE_LOCAL_TTL=${CACHE_LOCAL_TTL}
+      
+      # Configurações de limpeza
+      - DEL_INSTANCE=${DEL_INSTANCE}
+      - DEL_TEMP_INSTANCES=${DEL_TEMP_INSTANCES}
     volumes:
       - evo_store:/evolution/store
       - evo_instances:/evolution/instances
@@ -74,6 +94,12 @@ services:
           - node.role == worker
           - node.labels.environment == flowbot
     command: mongod --bind_ip_all --auth
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
     
 volumes:
   evo_store:
