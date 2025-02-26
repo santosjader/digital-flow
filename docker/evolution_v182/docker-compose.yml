@@ -1,0 +1,52 @@
+services:
+  evolution:
+      image: atendai/evolution-api:v1.8.2
+      restart: always
+      environment:
+        - TYPEBOT_ENABLED=${TYPEBOT_ENABLED}
+        - DIFY_ENABLED=${DIFY_ENABLED}
+        - CHATWOOT_ENABLED=${CHATWOOT_ENABLED}
+        - OPENAI_ENABLE=${OPENAI_ENABLE}
+        - SERVER_URL=${SERVER_URL}
+        - AUTHENTICATION_API_KEY=${AUTHENTICATION_API_KEY}
+        - CACHE_REDIS_ENABLED=${CACHE_REDIS_ENABLED}
+        - CACHE_REDIS_PREFIX_KEY=${CACHE_REDIS_PREFIX_KEY}
+        - CACHE_REDIS_SAVE_INSTANCES=${CACHE_REDIS_SAVE_INSTANCES}
+        - CACHE_LOCAL_ENABLED=${CACHE_LOCAL_ENABLED}
+      volumes:
+        - evo_store:/evolution/store
+        - evo_instances:/evolution/instances
+      networks:
+        - app_network
+        - proxy_network
+      logging:
+        driver: json-file
+        options:
+          max-size: 10m
+          max-file: "3"
+      deploy:
+        replicas: 1
+        restart_policy:
+          condition: on-failure
+        update_config:
+          parallelism: 1
+          delay: 10s
+          failure_action: rollback 
+          monitor: 60s
+          max_failure_ratio: 0.2
+        placement:
+          constraints:
+            - node.role == worker
+            - node.labels.environment == flowbot
+
+volumes:
+  evo_store:
+    external: true
+  evo_instances:
+    external: true
+
+networks:
+  app_network:
+    external: true
+  proxy_network:
+    external: true
