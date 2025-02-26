@@ -37,6 +37,7 @@ services:
       placement:
         constraints:
           - node.role == worker
+          - node.labels.environment == flowbot
 
 networks:
   app_network:
