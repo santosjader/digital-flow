@@ -30,7 +30,7 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == worker
+          - node.role == manager
           
   pgbouncer:
     image: edoburu/pgbouncer:latest
@@ -66,47 +66,7 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == worker
-  minio:
-    image: quay.io/minio/minio
-    command: server /data --console-address ":9001"
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    volumes:
-      - minio_data:/data
-    environment:
-      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
-      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
-      - MINIO_BROWSER_REDIRECT_URL=${MINIO_BROWSER_REDIRECT_URL}
-      - GF_USERS_ALLOW_SIGN_UP=false
-    networks:
-      - app_network
-      - proxy_network
-    logging:
-      driver: json-file
-      options:
-        max-size: 10m
-        max-file: "3"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-      update_config:
-        parallelism: 1
-        delay: 10s
-        failure_action: rollback 
-        monitor: 60s
-        max_failure_ratio: 0.2
-      placement:
-        constraints:
-          - node.role == worker
+          - node.role == manager
           
   redis:
     image: redis:latest
@@ -150,8 +110,6 @@ volumes:
   postgres_data:
     external: true
   pgbouncer_data:
-    external: true
-  minio_data:
     external: true
   redis_data:
     external: true
