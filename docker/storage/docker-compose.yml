@@ -31,6 +31,7 @@ services:
       placement:
         constraints:
           - node.role == worker
+          - node.labels.environment == flowbot
           
   pgbouncer:
     image: edoburu/pgbouncer:latest
@@ -67,6 +68,7 @@ services:
       placement:
         constraints:
           - node.role == worker
+          - node.labels.environment == flowbot
           
   redis:
     image: redis:latest
@@ -99,6 +101,7 @@ services:
       placement:
         constraints:
           - node.role == worker
+          - node.labels.environment == flowbot
           
 networks:
   app_network:
