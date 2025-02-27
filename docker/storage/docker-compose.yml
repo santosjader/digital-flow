@@ -30,8 +30,7 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == worker
-          - node.labels.environment == flowbot
+          - node.role == manager
           
   pgbouncer:
     image: edoburu/pgbouncer:latest
@@ -67,8 +66,7 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == worker
-          - node.labels.environment == flowbot
+          - node.role == manager
           
   redis:
     image: redis:latest
@@ -100,8 +98,7 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == worker
-          - node.labels.environment == flowbot
+          - node.role == manager
           
 networks:
   app_network:
