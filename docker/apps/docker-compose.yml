@@ -15,6 +15,7 @@ services:
       - EMAIL_SERVER_USER=${EMAIL_SERVER_USER}
       - EMAIL_SERVER_PASSWORD=${EMAIL_SERVER_PASSWORD}
       - NODE_ENV=${NODE_ENV}
+      - ALLOWED_HOSTNAMES=${ALLOWED_HOSTNAMES}
     networks:
       - app_network
       - proxy_network
