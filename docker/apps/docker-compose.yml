@@ -25,6 +25,8 @@ services:
         max-file: "3"
     deploy:
       replicas: 1
+      restart_policy:
+        condition: on-failure
       update_config:
         parallelism: 1
         delay: 10s
