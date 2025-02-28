@@ -1,6 +1,6 @@
 services:
   calcom:
-    image: calcom/cal.com:v4.7.8
+    image: calcom/cal.com:v3.9.1
     environment:
       - NEXT_PUBLIC_WEBAPP_URL=${NEXT_PUBLIC_WEBAPP_URL}
       - NEXT_PUBLIC_API_V2_URL=${NEXT_PUBLIC_API_V2_URL}
