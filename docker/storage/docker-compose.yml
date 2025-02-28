@@ -34,7 +34,7 @@ services:
           - node.labels.environment == flowbot
           
   pgbouncer:
-    image: edoburu/pgbouncer:latest
+    image: edoburu/pgbouncer:v1.23.1-p3
     networks:
       - app_network
     volumes:
