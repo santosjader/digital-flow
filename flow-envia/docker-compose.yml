@@ -1,5 +1,5 @@
 services:
-  evolution:
+  fe_evolution:
     image: atendai/evolution-api:v1.8.2
     restart: always
     environment:
@@ -38,8 +38,8 @@ services:
       - DEL_INSTANCE=${DEL_INSTANCE}
       - DEL_TEMP_INSTANCES=${DEL_TEMP_INSTANCES}
     volumes:
-      - envia_evo_store:/evolution/store
-      - envia_evo_instances:/evolution/instances
+      - fe_evo_store:/evolution/store
+      - fe_evo_instances:/evolution/instances
     networks:
       - app_network
       - proxy_network
@@ -65,13 +65,13 @@ services:
     depends_on:
       - mongodb
 
-  mongodb:
+  fe_mongodb:
     image: mongo:4.4
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
-      - envia_mongodb_data:/data/db
+      - fe_mongodb_data:/data/db
     logging:
       driver: json-file
       options:
@@ -100,11 +100,11 @@ services:
       start_period: 10s
     
 volumes:
-  envia_evo_store:
+  fe_evo_store:
     external: true
-  envia_evo_instances:
+  fe_evo_instances:
     external: true
-  envia_mongodb_data:
+  fe_mongodb_data:
     external: true
 
 networks:
