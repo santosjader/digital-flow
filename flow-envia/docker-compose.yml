@@ -61,7 +61,7 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.environment == flowbot
+          - node.labels.environment == flowenvia
     depends_on:
       - mongodb
 
@@ -90,7 +90,7 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.environment == flowbot
+          - node.labels.environment == flowenvia
     command: mongod --bind_ip_all --auth
     healthcheck:
       test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
