@@ -63,7 +63,7 @@ services:
           - node.role == worker
           - node.labels.environment == flowenvia
     depends_on:
-      - mongodb
+      - fe_mongodb
 
   fe_mongodb:
     image: mongo:4.4
@@ -108,5 +108,7 @@ volumes:
     external: true
 
 networks:
+  app_network:
+    external: true
   proxy_network:
     external: true
