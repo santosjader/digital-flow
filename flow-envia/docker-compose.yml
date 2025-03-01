@@ -72,6 +72,8 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - fe_mongodb_data:/data/db
+    networks:
+      - app_network
     logging:
       driver: json-file
       options:
