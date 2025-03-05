@@ -1,6 +1,6 @@
 services:
   fe_evolution:
-    image: atendai/evolution-api:v2.2.2
+    image: atendai/evolution-api:v2.2.3
     restart: always
     environment:
     #SERVER
