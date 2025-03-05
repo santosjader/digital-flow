@@ -22,9 +22,6 @@ services:
       - QRCODE_COLOR=${QRCODE_COLOR}
     #CACHE
       - CACHE_REDIS_ENABLED=${CACHE_REDIS_ENABLED}
-      - CACHE_REDIS_URI=${CACHE_REDIS_URI}
-      - CACHE_REDIS_PREFIX_KEY=${CACHE_REDIS_PREFIX_KEY}
-      - CACHE_REDIS_SAVE_INSTANCES=${CACHE_REDIS_SAVE_INSTANCES}
       - CACHE_LOCAL_ENABLED=${CACHE_LOCAL_ENABLED}
     #ARMAZENAMENTO
       - S3_ENABLED=${S3_ENABLED}
@@ -111,46 +108,11 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
-  
-  fe_redis:
-    image: redis:alpine
-    command: redis-server --appendonly yes
-    volumes:
-      - fe_redis_data:/data
-    networks:
-      - proxy_network
-    logging:
-      driver: json-file
-      options:
-        max-size: 10m
-        max-file: "3"
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-      update_config:
-        parallelism: 1
-        delay: 10s
-        failure_action: rollback 
-        monitor: 60s
-        max_failure_ratio: 0.2
-      placement:
-        constraints:
-          - node.role == worker
-          - node.labels.environment == flowenvia
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
     
 volumes:
   fe_evo_instances:
     external: true
   fe_mysql_data:
-    external: true
-  fe_redis_data:
     external: true
 networks:
   proxy_network:
