@@ -50,7 +50,6 @@ services:
     volumes:
       - fe_evo_instances:/evolution/instances
     networks:
-      - app_network
       - proxy_network
     logging:
       driver: json-file
@@ -73,6 +72,7 @@ services:
           - node.labels.environment == flowenvia
     depends_on:
       - fe_mysql
+      - fe_redis
 
   fe_mysql:
     image: mysql:8.0
@@ -85,7 +85,7 @@ services:
     volumes:
       - fe_mysql_data:/var/lib/mysql
     networks:
-      - app_network
+      - proxy_network
     logging:
       driver: json-file
       options:
@@ -111,14 +111,47 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
+  
+  fe_redis:
+    image: redis:alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - fe_redis_data:/data
+    networks:
+      - proxy_network
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback 
+        monitor: 60s
+        max_failure_ratio: 0.2
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.environment == flowenvia
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
     
 volumes:
   fe_evo_instances:
     external: true
   fe_mysql_data:
     external: true
-networks:
-  app_network:
+  fe_redis_data:
     external: true
+networks:
   proxy_network:
     external: true
