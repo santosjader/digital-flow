@@ -1,5 +1,5 @@
 services:
-  fe_evolution:
+  evolution:
     image: atendai/evolution-api:v2.1.1
     restart: always
     environment:
@@ -74,7 +74,7 @@ services:
       - fe_mysql
       - fe_redis
 
-  fe_mysql:
+  mysql:
     image: mysql:8.0
     command: --default-authentication-plugin=mysql_native_password
     environment:
@@ -112,7 +112,7 @@ services:
       retries: 3
       start_period: 10s
 
-  fe_redis:
+  redis:
     image: redis:alpine
     command: redis-server --appendonly yes
     volumes:
