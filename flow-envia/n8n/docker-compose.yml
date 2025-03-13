@@ -1,1 +1,154 @@
+services:
+  fe_n8n:
+    image: docker.n8n.io/n8nio/n8n
+    volumes:
+      - fe_n8n_data:/home/node/.n8n
+    networks:
+      - proxy_network
+    environment:
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      - DB_TYPE=${DB_TYPE}
+      - DB_POSTGRESDB_HOST=${DB_POSTGRESDB_HOST}
+      - DB_POSTGRESDB_PORT=${DB_POSTGRESDB_PORT}
+      - DB_POSTGRESDB_DATABASE=${DB_POSTGRESDB_DATABASE}
+      - DB_POSTGRESDB_USER=${DB_POSTGRESDB_USER}
+      - DB_POSTGRESDB_PASSWORD=${DB_POSTGRESDB_PASSWORD}
+      - DB_POSTGRESDB_SCHEMA=${DB_POSTGRESDB_SCHEMA}
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=${N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS}
+      - N8N_REDIS_HOST=${N8N_REDIS_HOST}
+      - N8N_REDIS_PORT=${N8N_REDIS_PORT}
+      - N8N_QUEUE_MODE=true
+      - QUEUE_BULL_REDIS_DB=${QUEUE_BULL_REDIS_DB}
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback 
+        monitor: 60s
+        max_failure_ratio: 0.2
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.environment == flowenvia
 
+  fe_postgres:
+    image: pgvector/pgvector:0.8.0-pg17
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback 
+        monitor: 60s
+        max_failure_ratio: 0.2
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.environment == flowenvia
+          
+  fe_pgbouncer:
+    image: edoburu/pgbouncer:v1.23.1-p3
+    volumes:
+      - pgbouncer_data:/etc/pgbouncer 
+    ports:
+      - "5432:5432"
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - AUTH_TYPE=${AUTH_TYPE}
+      - POOL_MODE=${POOL_MODE}
+      - MAX_CLIENT_CONN=${MAX_CLIENT_CONN}
+      - DEFAULT_POOL_SIZE=${DEFAULT_POOL_SIZE}
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-h', 'localhost']
+      interval: 30s
+      timeout: 10s 
+      retries: 3
+      start_period: 10s
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback 
+        monitor: 60s
+        max_failure_ratio: 0.2
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.environment == flowenvia
+          
+  fe_redis:
+    image: redis:latest
+    command: ["redis-server", "--appendonly", "yes", "--port", "6379"]
+    networks:
+      - fe_network
+    volumes:
+      - fe_redis_data:/data
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback 
+        monitor: 60s
+        max_failure_ratio: 0.2
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.environment == flowenvia
+    
+volumes:
+  fe_postgres_data:
+    external: true
+  fe_pgbouncer_data:
+    external: true
+  fe_n8n_data:
+    external: true
+networks:
+  fe_network:
+    external: true
+  proxy_network:
+    external: true
