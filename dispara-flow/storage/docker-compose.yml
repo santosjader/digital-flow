@@ -65,10 +65,8 @@ services:
 volumes:
   postgres_data:
     external: true
-  pgbouncer_data:
-    external: true
-  n8n_data:
+  redis_data:
     external: true
 networks:
-  proxy_network:
+  postgres_network:
     external: true
