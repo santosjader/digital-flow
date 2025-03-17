@@ -1,11 +1,13 @@
 services:
   cloudflared:
     image: cloudflare/cloudflared:latest
-    command: tunnel --no-autoupdate run --token-file /run/secrets/cloudflare_token
+    command: tunnel run --token ${TUNNEL_TOKEN}
     secrets:
       - cloudflare_token
+	environment: 
+	  - TUNNEL_TOKEN_FILE=/run/secrets/cloudflare_token
     networks:
-      - tunnel_network
+      - proxy_network
     logging:
       driver: json-file
       options:
@@ -26,9 +28,9 @@ services:
           - node.role == manager
 
 networks:
-  tunnel_network:
+  proxy_network:
     external: true
 
 secrets:
   cloudflare_token:
-    external: true
+	external: true
