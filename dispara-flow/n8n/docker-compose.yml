@@ -105,12 +105,12 @@ services:
           - node.role == manager
     
 volumes:
-  postgres_data:
-    external: true
-  pgbouncer_data:
-    external: true
   n8n_data:
     external: true
 networks:
   proxy_network:
+    external: true
+  postgres_network:
+    external: true
+  redis_network:
     external: true
