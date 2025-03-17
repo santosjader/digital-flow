@@ -37,6 +37,8 @@ services:
     command: ["redis-server", "--appendonly", "yes", "--port", "6379"]
     volumes:
       - redis_data:/data
+    networks:
+      - redis_network
     logging:
       driver: json-file
       options:
@@ -69,4 +71,6 @@ volumes:
     external: true
 networks:
   postgres_network:
+    external: true
+  redis_network:
     external: true
