@@ -1,4 +1,5 @@
 services:
+services:
   caddy:
     image: caddy:2.9.1
     ports:
@@ -13,10 +14,6 @@ services:
     networks:
       - proxy_network
       - tunnel_network
-    environment:
-      CLOUDFLARE_EMAIL: ${CLOUDFLARE_EMAIL}
-      CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN}
-      ACME_AGREE: ${ACME_AGREE}
     logging:
       driver: json-file
       options:
