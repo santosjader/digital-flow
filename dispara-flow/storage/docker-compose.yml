@@ -33,7 +33,7 @@ services:
           - node.role == manager
             
   redis:
-    image: redis:alpine3.21
+    image: redis:alpine
     command: ["redis-server", "--appendonly", "yes", "--port", "6379"]
     volumes:
       - redis_data:/data
