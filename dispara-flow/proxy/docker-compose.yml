@@ -12,6 +12,7 @@ services:
       - caddy_config:/config
     networks:
       - proxy_network
+      - tunnel_network
     logging:
       driver: json-file
       options:
@@ -33,6 +34,8 @@ services:
         
 networks:
   proxy_network:
+    external: true
+  tunnel_network:
     external: true
 configs:
   Caddyfile:
