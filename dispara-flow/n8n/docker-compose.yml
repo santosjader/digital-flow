@@ -5,8 +5,7 @@ services:
       - n8n_data:/home/node/.n8n
     networks:
       - proxy_network
-      - postgres_network
-      - redis_network
+      - pstorage_network
     environment:
       - WEBHOOK_URL=${WEBHOOK_URL}
       - DB_TYPE=${DB_TYPE}
@@ -110,7 +109,5 @@ volumes:
 networks:
   proxy_network:
     external: true
-  postgres_network:
-    external: true
-  redis_network:
+  storage_network:
     external: true
