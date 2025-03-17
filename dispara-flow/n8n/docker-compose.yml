@@ -1,10 +1,12 @@
 services:
-  fe_n8n:
+  n8n:
     image: docker.n8n.io/n8nio/n8n
     volumes:
-      - fe_n8n_data:/home/node/.n8n
+      - n8n_data:/home/node/.n8n
     networks:
       - proxy_network
+      - postgres_network
+      - redis_network
     environment:
       - WEBHOOK_URL=${WEBHOOK_URL}
       - DB_TYPE=${DB_TYPE}
@@ -37,13 +39,14 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == worker
-          - node.labels.environment == flowenvia
+          - node.role == manager
 
-  fe_postgres:
-    image: pgvector/pgvector:0.8.0-pg17
+  postgres:
+    image: postgres:16-alpine3.20
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - postgres_network
     environment:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     logging:
@@ -69,51 +72,13 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == worker
-          - node.labels.environment == flowenvia
-          
-  fe_pgbouncer:
-    image: edoburu/pgbouncer:v1.23.1-p3
-    volumes:
-      - pgbouncer_data:/etc/pgbouncer 
-    ports:
-      - "5432:5432"
-    environment:
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${POSTGRES_PASSWORD}
-      - DB_HOST=${DB_HOST}
-      - AUTH_TYPE=${AUTH_TYPE}
-      - POOL_MODE=${POOL_MODE}
-      - MAX_CLIENT_CONN=${MAX_CLIENT_CONN}
-      - DEFAULT_POOL_SIZE=${DEFAULT_POOL_SIZE}
-    healthcheck:
-      test: ['CMD', 'pg_isready', '-h', 'localhost']
-      interval: 30s
-      timeout: 10s 
-      retries: 3
-      start_period: 10s
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-      update_config:
-        parallelism: 1
-        delay: 10s
-        failure_action: rollback 
-        monitor: 60s
-        max_failure_ratio: 0.2
-      placement:
-        constraints:
-          - node.role == worker
-          - node.labels.environment == flowenvia
-          
-  fe_redis:
+          - node.role == manager
+            
+  redis:
     image: redis:latest
     command: ["redis-server", "--appendonly", "yes", "--port", "6379"]
-    networks:
-      - fe_network
     volumes:
-      - fe_redis_data:/data
+      - redis_data:/data
     logging:
       driver: json-file
       options:
@@ -137,18 +102,15 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == worker
-          - node.labels.environment == flowenvia
+          - node.role == manager
     
 volumes:
-  fe_postgres_data:
+  postgres_data:
     external: true
-  fe_pgbouncer_data:
+  pgbouncer_data:
     external: true
-  fe_n8n_data:
+  n8n_data:
     external: true
 networks:
-  fe_network:
-    external: true
   proxy_network:
     external: true
