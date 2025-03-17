@@ -4,10 +4,10 @@ services:
     command: tunnel run --token ${TUNNEL_TOKEN}
     secrets:
       - cloudflare_token
-	environment: 
-	  - TUNNEL_TOKEN_FILE=/run/secrets/cloudflare_token
+    environment: 
+      - TUNNEL_TOKEN_FILE=/run/secrets/cloudflare_token
     networks:
-      - proxy_network
+      - tunnel_network
     logging:
       driver: json-file
       options:
@@ -28,7 +28,7 @@ services:
           - node.role == manager
 
 networks:
-  proxy_network:
+  tunnel_network:
     external: true
 
 secrets:
