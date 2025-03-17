@@ -4,7 +4,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - postgres_network
+      - storage_network
     environment:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     logging:
@@ -38,7 +38,7 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      - redis_network
+      - storage_network
     logging:
       driver: json-file
       options:
@@ -70,7 +70,5 @@ volumes:
   redis_data:
     external: true
 networks:
-  postgres_network:
-    external: true
-  redis_network:
+  storage_network:
     external: true
