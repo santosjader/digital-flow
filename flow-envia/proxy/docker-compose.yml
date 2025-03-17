@@ -31,6 +31,33 @@ services:
       placement:
         constraints:
           - node.role == manager
+          
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run
+    volumes:
+      - cloudflared_config:/etc/cloudflared
+    networks:
+      - tunnel_network
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback 
+        monitor: 60s
+        max_failure_ratio: 0.2
+      placement:
+        constraints:
+          - node.role == manager
+         
 networks:
   proxy_network:
     external: true
@@ -43,4 +70,6 @@ volumes:
   caddy_data:
     external: true
   caddy_config:
+    external: true
+  cloudflared_config:
     external: true
