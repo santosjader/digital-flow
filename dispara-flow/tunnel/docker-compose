@@ -1,11 +1,11 @@
-services:        
+services:
   cloudflared:
     image: cloudflare/cloudflared:latest
-    command: tunnel --no-autoupdate run
-    volumes:
-      - cloudflared_config:/etc/cloudflared
+    command: tunnel --no-autoupdate run --token-file /run/secrets/cloudflare_token
+    secrets:
+      - cloudflare_token
     networks:
-      - tunnel_network
+      - proxy_network
     logging:
       driver: json-file
       options:
@@ -24,10 +24,11 @@ services:
       placement:
         constraints:
           - node.role == manager
-         
+
 networks:
-  tunnel_network:
+  proxy_network:
     external: true
-volumes:
-  cloudflared_config:
-    external: true
+
+secrets:
+  cloudflare_token:
+	external: true
