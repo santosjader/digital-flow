@@ -1,0 +1,74 @@
+services:
+  postgres:
+    image: postgres:16-alpine3.20
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - postgres_network
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback 
+        monitor: 60s
+        max_failure_ratio: 0.2
+      placement:
+        constraints:
+          - node.role == manager
+            
+  redis:
+    image: redis:alpine3.21
+    command: ["redis-server", "--appendonly", "yes", "--port", "6379"]
+    volumes:
+      - redis_data:/data
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback 
+        monitor: 60s
+        max_failure_ratio: 0.2
+      placement:
+        constraints:
+          - node.role == manager
+    
+volumes:
+  postgres_data:
+    external: true
+  pgbouncer_data:
+    external: true
+  n8n_data:
+    external: true
+networks:
+  proxy_network:
+    external: true
