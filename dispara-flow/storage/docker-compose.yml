@@ -6,9 +6,9 @@ services:
     networks:
       - storage_network
     secrets:
-      - POSTGRES_PASSWORD
+      - PG_PASSWORD
     environment:
-      - POSTGRES_PASSWORD_FILE=/run/secrets/POSTGRES_PASSWORD
+      - POSTGRES_PASSWORD_FILE=/run/secrets/PG_PASSWORD
     logging:
       driver: json-file
       options:
@@ -77,5 +77,5 @@ networks:
     external: true
 
 secrets:
-  POSTGRES_PASSWORD:
+  PG_PASSWORD:
     external: true
