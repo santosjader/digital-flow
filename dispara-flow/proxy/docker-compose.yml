@@ -3,7 +3,7 @@ services:
     image: cloudflare/cloudflared:latest
     command: tunnel run
     environment:
-      - TUNNEL_TOKEN_FILE=${CF_TUNNEL_TOKEN}
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
     networks:
       - proxy_network
     logging:
