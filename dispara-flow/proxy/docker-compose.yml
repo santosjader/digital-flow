@@ -2,8 +2,10 @@ services:
   cloudflared:
     image: cloudflare/cloudflared:latest
     command: tunnel run
+    secrets:
+      - CF_TUNNEL_TOKEN
     environment:
-      TUNNEL_TOKEN: ${TUNNEL_TOKEN}
+      TUNNEL_TOKEN=/run/secrets/CF_TUNNEL_TOKEN
     networks:
       - proxy_network
     logging:
@@ -27,4 +29,8 @@ services:
         
 networks:
   proxy_network:
+    external: true
+
+secrets:
+  CF_TUNNEL_TOKEN:
     external: true
