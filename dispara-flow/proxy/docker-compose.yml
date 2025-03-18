@@ -1,45 +1,10 @@
-services:
-services:
-  caddy:
-    image: caddy:2.9.1
-    ports:
-      - "80:80"
-      - "443:443"
-    configs:
-      - source: Caddyfile
-        target: /etc/caddy/Caddyfile
-    volumes:
-      - caddy_data:/data
-      - caddy_config:/config
-    networks:
-      - proxy_network
-      - tunnel_network
-    logging:
-      driver: json-file
-      options:
-        max-size: 10m
-        max-file: "3"
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-      update_config:
-        parallelism: 1
-        delay: 10s
-        failure_action: rollback 
-        monitor: 60s
-        max_failure_ratio: 0.2
-      placement:
-        constraints:
-          - node.role == manager
-          
+services:        
   cloudflared:
     image: cloudflare/cloudflared:latest
     command: tunnel run
     environment:
       TUNNEL_TOKEN: ${TUNNEL_TOKEN}
     networks:
-      - tunnel_network
       - proxy_network
     logging:
       driver: json-file
@@ -47,7 +12,7 @@ services:
         max-size: 10m
         max-file: "3"
     deploy:
-      replicas: 1
+      mode: global
       restart_policy:
         condition: on-failure
       update_config:
@@ -56,20 +21,7 @@ services:
         failure_action: rollback 
         monitor: 60s
         max_failure_ratio: 0.2
-      placement:
-        constraints:
-          - node.role == manager
         
 networks:
   proxy_network:
-    external: true
-  tunnel_network:
-    external: true
-configs:
-  Caddyfile:
-    external: true
-volumes:
-  caddy_data:
-    external: true
-  caddy_config:
     external: true
