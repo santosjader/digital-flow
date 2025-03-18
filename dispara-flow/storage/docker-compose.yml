@@ -5,10 +5,8 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - storage_network
-    secrets:
-      - PG_PASSWORD
     environment:
-      - POSTGRES_PASSWORD_FILE=/run/secrets/PG_PASSWORD
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     logging:
       driver: json-file
       options:
@@ -74,8 +72,4 @@ volumes:
     
 networks:
   storage_network:
-    external: true
-
-secrets:
-  PG_PASSWORD:
     external: true
