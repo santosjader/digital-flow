@@ -21,3 +21,10 @@ services:
       placement:
         constraints:
           - node.role == manager
+          
+volumes:
+  uptime_data:
+    external: true
+networks:
+  proxy_network:
+    external: true
