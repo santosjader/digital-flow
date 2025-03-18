@@ -2,14 +2,17 @@ services:
   evolution:
     image: atendai/evolution-api:v2.1.1
     restart: always
+    secrets:
+      - EVO_AUTH_API_KEY
+      - EVO_DB_CONN_URI
     environment:
     #SERVER
       - SERVER_TYPE=${SERVER_TYPE}
       - SERVER_PORT=${SERVER_PORT}
       - SERVER_URL=${SERVER_URL}
     #AUTENTICACAO
-      - AUTHENTICATION_API_KEY=${AUTHENTICATION_API_KEY}
-      - AUTHENTICATION_EXPOSE_IN_FETCH_INSTANCES=${AUTHENTICATION_EXPOSE_IN_FETCH_INSTANCES}
+      - AUTHENTICATION_API_KEY=/run/secrets/EVO_AUTH_API_KEY
+      - AUTHENTICATION_EXPOSE_IN_FETCH_INSTANCES=/run/secrets/EVO_DB_CONN_URI
     #INSTANCIAS
       - DEL_INSTANCE=${DEL_INSTANCE}
     #WEBHOOK
@@ -74,8 +77,15 @@ services:
 volumes:
   evo_instances:
     external: true
+    
 networks:
   proxy_network:
     external: true
   storage_network:
+    external: true
+
+secrets:
+  EVO_AUTH_API_KEY:
+    external: true
+  EVO_DB_CONN_URI:
     external: true
