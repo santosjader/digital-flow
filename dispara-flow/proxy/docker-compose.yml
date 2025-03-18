@@ -18,7 +18,7 @@ services:
       retries: 3
       start_period: 30s
     deploy:
-      replicas: 1  # Voltando para replicas em vez de global
+      replicas: 1
       restart_policy:
         condition: on-failure
       update_config:
@@ -29,7 +29,7 @@ services:
         max_failure_ratio: 0.2
       placement:
         constraints:
-          - node.role == manager  # Mantendo a restrição ao manager
+          - node.role == manager
         
 networks:
   proxy_network:
