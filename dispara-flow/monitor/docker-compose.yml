@@ -16,8 +16,11 @@ services:
           - node.role == manager
       resources:
         limits:
-          cpus: '0.5'
-          memory: 512M
+          cpus: '0.3'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
     volumes:
       - type: volume
         source: grafana_data
@@ -57,8 +60,11 @@ services:
           - node.role == manager
       resources:
         limits:
-          cpus: '0.5'
+          cpus: '0.3'
           memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 256M
     volumes:
       - type: volume
         source: prometheus_data
