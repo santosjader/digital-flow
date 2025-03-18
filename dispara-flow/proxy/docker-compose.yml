@@ -40,6 +40,7 @@ services:
       TUNNEL_TOKEN: ${TUNNEL_TOKEN}
     networks:
       - tunnel_network
+      - proxy_network
     logging:
       driver: json-file
       options:
