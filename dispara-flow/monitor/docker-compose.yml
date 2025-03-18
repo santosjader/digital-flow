@@ -1,11 +1,6 @@
 services:
   grafana:
     image: portainer/template-swarm-monitoring:grafana-9.5.2
-    ports:
-      - target: 3000
-        published: 3000
-        protocol: tcp
-        mode: ingress
     deploy:
       replicas: 1
       restart_policy:
@@ -31,6 +26,8 @@ services:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
       - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_ROOT_URL=https://monitor.disparaflow.com.br
+      - GF_AUTH_ANONYMOUS_ENABLED=false
     networks:
       - monitor_network
       - proxy_network
@@ -135,6 +132,7 @@ volumes:
     external: true
   prometheus_data:
     external: true
+
 networks:
   proxy_network:
     external: true
