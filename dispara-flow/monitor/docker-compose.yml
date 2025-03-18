@@ -144,9 +144,3 @@ networks:
     external: true
   monitor_network:
     external: true
-
-secrets:
-  GF_SECURITY_ADMIN_USER:
-    external: true
-  GF_SECURITY_ADMIN_PASSWORD:
-    external: true
