@@ -1,5 +1,5 @@
 services:
-  n8n:
+  n8n_test:
     image: n8nio/n8n:1.79.4
     volumes:
       - dev_n8n_data:/home/node/.n8n
@@ -41,7 +41,7 @@ services:
         constraints:
           - node.role == manager
 
-  evolution:
+  evolution_test:
     image: atendai/evolution-api:v2.1.1
     restart: always
     environment:
@@ -113,7 +113,7 @@ services:
         constraints:
           - node.role == manager
 
-  cloudflared:
+  cloudflared_test:
     image: cloudflare/cloudflared:latest
     command: tunnel run
     environment:
