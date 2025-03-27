@@ -2,7 +2,7 @@ services:
   n8n:
     image: n8nio/n8n:1.79.4
     volumes:
-      - n8n_data:/home/node/.n8n
+      - dev_n8n_data:/home/node/.n8n
     networks:
       - proxy_network
       - storage_network
@@ -90,7 +90,7 @@ services:
       - LOG_COLOR=${LOG_COLOR}
       - LOG_BAILEYS=${LOG_BAILEYS}
     volumes:
-      - evo_instances:/evolution/instances
+      - dev_evo_instances:/evolution/instances
     networks:
       - proxy_network
       - storage_network
